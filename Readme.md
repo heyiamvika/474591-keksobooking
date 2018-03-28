@@ -1,7 +1,7 @@
 # Личный проект «Кексобукинг» [![Build status][travis-image]][travis-url]
 
 * Студент: [Viktoriia Nosova](https://up.htmlacademy.ru/javascript/13/user/474591).
-* Наставник: `Неизвестно`.
+* Наставник: `Руфат Хасларов`.
 
 ---
 
