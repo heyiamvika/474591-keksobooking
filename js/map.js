@@ -18,8 +18,6 @@ var pinImage = pinTemplate.querySelector('img')
 var cardTemplate = document.querySelector('template').content.querySelector('.map__card')
 var filtersContainer = document.querySelector('.map__filters-container')
 
-map.classList.remove('map--faded')
-
 // Helper functions
 
 var getRandomNumber = function (min, max) {
@@ -107,43 +105,42 @@ var renderPins = function () {
   }
 
   pinList.appendChild(fragment)
-  console.log(pinList)
 }
 
-var generateCard = function (location) {
+var generateCard = function (place) {
   var card = cardTemplate.cloneNode(true)
-  card.querySelector('.popup__title').textContent = location.offer.title
-  card.querySelector('.popup__text--address').textContent = location.offer.address
-  // Fix the address!
-  card.querySelector('.popup__text--price').textContent = location.offer.price + '₽/ночь'
+  card.querySelector('.popup__title').textContent = place.offer.title
+  card.querySelector('.popup__text--address').textContent = place.location.x + ', ' + place.location.y
+  card.querySelector('.popup__text--price').textContent = place.offer.price + '₽/ночь'
 
-  if (location.offer.type === 'flat') {
+  if (place.offer.type === 'flat') {
     card.querySelector('.popup__type').textContent = 'Квартира'
-  } else if (location.offer.type === 'house') {
+  } else if (place.offer.type === 'house') {
     card.querySelector('.popup__type').textContent = 'Дом'
-  } else if (location.offer.type === 'palace') {
+  } else if (place.offer.type === 'palace') {
     card.querySelector('.popup__type').textContent = 'Дворец'
   }
 
-  card.querySelector('.popup__text--capacity').textContent = location.offer.rooms + ' комнаты для ' + location.offer.guests + ' гостей'
-  card.querySelector('.popup__text--time').textContent = 'Заезд после ' + location.offer.checkin + ', выезд до ' + location.offer.checkout
+  card.querySelector('.popup__text--capacity').textContent = place.offer.rooms + ' комнаты для ' + place.offer.guests + ' гостей'
+  card.querySelector('.popup__text--time').textContent = 'Заезд после ' + place.offer.checkin + ', выезд до ' + place.offer.checkout
   for (var i = 0; i < listingFeatures.length; i++) {
     card.querySelector('.popup__feature').textContent = listingFeatures[i]
   }
-  card.querySelector('.popup__description').textContent = location.offer.description
-  for (i = 0; i < location.offer.photos.length; i++) {
+  card.querySelector('.popup__description').textContent = place.offer.description
+  for (i = 0; i < place.offer.photos.length; i++) {
     var cardPhoto = card.querySelector('.popup__photo').cloneNode()
-    cardPhoto.src = location.offer.photos[i]
+    cardPhoto.src = place.offer.photos[i]
     card.querySelector('.popup__photos').appendChild(cardPhoto)
   }
   card.querySelector('.popup__photo').remove()
-  card.querySelector('.popup__avatar').src = location.author.avatar
+  card.querySelector('.popup__avatar').src = place.author.avatar
 
   document.querySelector('.map').insertBefore(card, filtersContainer)
 }
 
 // Execution
 
+map.classList.remove('map--faded')
 generateSimilarListings()
 renderPins()
 generateCard(similarListings[0])
