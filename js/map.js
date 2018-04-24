@@ -54,14 +54,17 @@ var getArrayOfRandomLength = function (initialArray) {
 
 var generateSimilarListings = function () {
   for (var i = 0; i < 8; i++) {
+    var x = getRandomNumber(300, 900)
+    var y = getRandomNumber(150, 500)
+
     var listing = {
       'author': {
-        'avatar': 'img/avatars/user0' + getRandomNumber(1, 8) + '.png'
+        'avatar': 'img/avatars/user0' + (i + 1) + '.png'
       },
 
       'offer': {
         'title': getRandomValue(listingTitle),
-        'address': location.x + ', ' + location.y,
+        'address': x + ', ' + y,
         'price': getRandomNumber(1000, 1000000),
         'type': getRandomValue(listingType),
         'rooms': getRandomNumber(1, 5),
@@ -74,8 +77,8 @@ var generateSimilarListings = function () {
       },
 
       'location': {
-        'x': getRandomNumber(300, 900),
-        'y': getRandomNumber(150, 500)
+        'x': x,
+        'y': y
       }
     }
 
@@ -94,6 +97,7 @@ var createPins = function (pin) {
   // Why is  there an empty string, when I console.log()???
   element.style.alt = pin.offer.title
 
+  console.log(element.style.src)
   return element
 }
 
