@@ -59,7 +59,7 @@ var generateSimilarListings = function () {
 
     var listing = {
       'author': {
-        'avatar': 'img/avatars/user0' + (i + 1) + '.png'
+        'avatar': 'img/avatars/user0' + getRandomNumber(1, 8) + '.png'
       },
 
       'offer': {
