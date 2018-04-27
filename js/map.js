@@ -12,6 +12,9 @@ var listingPhotos = ['http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http
 // Elements
 
 var map = document.querySelector('.map')
+var mainPin = document.querySelector('.map__pin--main')
+var adForm = document.querySelector('.ad-form')
+var adFormFieldset = adForm.querySelectorAll('fieldset')
 var pinList = document.querySelector('.map__pins')
 var pinTemplate = document.querySelector('.map__pin')
 var pinImage = pinTemplate.querySelector('img')
@@ -97,7 +100,6 @@ var createPins = function (pin) {
   // Why is  there an empty string, when I console.log()???
   element.style.alt = pin.offer.title
 
-  console.log(element.style.src)
   return element
 }
 
@@ -142,9 +144,18 @@ var generateCard = function (place) {
   document.querySelector('.map').insertBefore(card, filtersContainer)
 }
 
+// Event listeners
+
+mainPin.addEventListener('click', function () {
+  map.classList.remove('map--faded')
+  adForm.classList.remove('ad-form--disabled')
+  adFormFieldset.forEach(function (element) {
+    element.removeAttribute('disabled')
+  })
+})
+
 // Execution
 
-map.classList.remove('map--faded')
-generateSimilarListings()
-renderPins()
-generateCard(similarListings[0])
+// generateSimilarListings()
+// renderPins()
+// generateCard(similarListings[0])
