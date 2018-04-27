@@ -176,11 +176,20 @@ var activatePage = function () {
   mainPin.removeEventListener('mouseup', activatePage)
 }
 
-mainPin.addEventListener('mouseup', activatePage)
-
 // Execution
-
 defineAddressUnactivated()
-// generateSimilarListings()
+mainPin.addEventListener('mouseup', activatePage)
+mainPin.addEventListener('click', function () {
+  generateCard(similarListings[0])
+})
 
-// generateCard(similarListings[0])
+// for (var i = 2; i <= pinList.length; i++) {
+//   generateCard(similarListings[i - 2])
+// }
+
+// {
+//   if (pinList.children[2]) { generateCard(similarListings[0]) } else {
+//     console.log('error')
+//   }
+// }
+// generateCard(pinList.children[1])
