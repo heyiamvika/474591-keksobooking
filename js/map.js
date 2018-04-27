@@ -15,6 +15,7 @@ var map = document.querySelector('.map')
 var mainPin = document.querySelector('.map__pin--main')
 var adForm = document.querySelector('.ad-form')
 var adFormFieldset = adForm.querySelectorAll('fieldset')
+var fieldsetAddress = adForm.querySelector('#address')
 var pinList = document.querySelector('.map__pins')
 var pinTemplate = document.querySelector('.map__pin')
 var pinImage = pinTemplate.querySelector('img')
@@ -146,12 +147,32 @@ var generateCard = function (place) {
 
 // Event listeners
 
-mainPin.addEventListener('click', function () {
+var activateForm = function () {
   map.classList.remove('map--faded')
   adForm.classList.remove('ad-form--disabled')
   adFormFieldset.forEach(function (element) {
     element.removeAttribute('disabled')
   })
+}
+
+var defineAddressUnactivated = function () {
+  var xInitial = parseInt(mainPin.style.left, 10)
+  var yInitial = parseInt(mainPin.style.top, 10)
+  fieldsetAddress.value = xInitial + ', ' + yInitial
+  console.log(fieldsetAddress.value)
+}
+
+var defineAddressActivated = function () {
+  var xAfterDragged = parseInt(pinTemplate.style.left, 10) + pinImage.width / 2
+  var yAfterDragged = parseInt(pinTemplate.style.top, 10) - pinImage.height
+  fieldsetAddress.value = xAfterDragged + ', ' + yAfterDragged
+}
+
+defineAddressUnactivated()
+
+mainPin.addEventListener('click', function () {
+  activateForm()
+  defineAddressActivated()
 })
 
 // Execution
