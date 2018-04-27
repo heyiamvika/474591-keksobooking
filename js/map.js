@@ -94,21 +94,23 @@ var generateSimilarListings = function () {
 
 var createPins = function (pin) {
   var element = pinTemplate.cloneNode(true)
+  var elementImage = element.querySelector('img')
 
   element.style.left = (pin.location.x - pinImage.width / 2) + 'px'
   element.style.top = (pin.location.y - pinImage.height) + 'px'
-  element.style.src = pin.author.avatar
-  // Why is  there an empty string, when I console.log()???
-  element.style.alt = pin.offer.title
+  elementImage.src = pin.author.avatar
+  elementImage.alt = pin.offer.title
 
   return element
 }
 
 var renderPins = function () {
+  var listings = generateSimilarListings()
+
   var fragment = document.createDocumentFragment()
 
-  for (var i = 0; i < similarListings.length; i++) {
-    fragment.appendChild(createPins(similarListings[i]))
+  for (var i = 0; i < listings.length; i++) {
+    fragment.appendChild(createPins(listings[i]))
   }
 
   pinList.appendChild(fragment)
@@ -159,7 +161,6 @@ var defineAddressUnactivated = function () {
   var xInitial = parseInt(mainPin.style.left, 10)
   var yInitial = parseInt(mainPin.style.top, 10)
   fieldsetAddress.value = xInitial + ', ' + yInitial
-  console.log(fieldsetAddress.value)
 }
 
 var defineAddressActivated = function () {
@@ -168,15 +169,18 @@ var defineAddressActivated = function () {
   fieldsetAddress.value = xAfterDragged + ', ' + yAfterDragged
 }
 
-defineAddressUnactivated()
-
-mainPin.addEventListener('click', function () {
+var activatePage = function () {
   activateForm()
   defineAddressActivated()
-})
+  renderPins()
+  mainPin.removeEventListener('mouseup', activatePage)
+}
+
+mainPin.addEventListener('mouseup', activatePage)
 
 // Execution
 
+defineAddressUnactivated()
 // generateSimilarListings()
-// renderPins()
+
 // generateCard(similarListings[0])
