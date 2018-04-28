@@ -105,6 +105,21 @@ var createPins = function (pin) {
   return element
 }
 
+// var renderPins = function () {
+//   var listings = generateSimilarListings()
+//   var fragment = document.createDocumentFragment()
+//
+//   for (var i = 0; i < listings.length; i++) {
+//     var pin = createPins(listings[i])
+//     pin.dataset.index = i
+//     fragment.appendChild(pin)
+//   }
+//
+//   pinList.appendChild(fragment)
+//
+//   return pinList
+// }
+
 var renderPins = function () {
   var listings = generateSimilarListings()
   var fragment = document.createDocumentFragment()
@@ -117,7 +132,11 @@ var renderPins = function () {
 
   pinList.appendChild(fragment)
 
-  return pinList
+  var pins = pinList.querySelectorAll('.map__pin')
+  for (i = 1; i < pins.length; i++) {
+    var pinIndex = pins[i].dataset.index
+    pins[i].addEventListener('click', generateCard(listings[pinIndex]))
+  }
 }
 
 var generateCard = function (place) {
@@ -173,21 +192,11 @@ var defineAddressActivated = function () {
   fieldsetAddress.value = xAfterDragged + ', ' + yAfterDragged
 }
 
-var renderCardOnClick = function () {
-  var listings = generateSimilarListings()
-  var pins = renderPins().querySelectorAll('.map__pin')
-  console.log(pins)
-
-  for (var i = 0; i <= pins.length; i++) {
-    var pinIndex = pins[i + 1].dataset.index
-    pins[i + 1].addEventListener('click', generateCard(listings[pinIndex]))
-  }
-}
-
 var activatePage = function () {
   activateForm()
   defineAddressActivated()
-  renderCardOnClick()
+  renderPins()
+  // renderCardOnClick()
   mainPin.removeEventListener('mouseup', activatePage)
 }
 
