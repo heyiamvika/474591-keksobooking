@@ -2,7 +2,6 @@
 
 // Data
 
-var similarListings = []
 var listingTitle = ['Большая уютная квартира', 'Маленькая неуютная квартира', 'Огромный прекрасный дворец', 'Маленький ужасный дворец', 'Красивый гостевой домик', 'Некрасивый негостеприимный домик', 'Уютное бунгало далеко от моря', 'Неуютное бунгало по колено в воде']
 var listingType = ['palace', 'flat', 'house', 'bungalo']
 var listingTime = ['12:00', '13:00', '14:00']
@@ -17,7 +16,7 @@ var adForm = document.querySelector('.ad-form')
 var adFormFieldset = adForm.querySelectorAll('fieldset')
 var fieldsetAddress = adForm.querySelector('#address')
 var pinList = document.querySelector('.map__pins')
-var pinTemplate = document.querySelector('.map__pin')
+var pinTemplate = pinList.querySelector('.map__pin')
 var pinImage = pinTemplate.querySelector('img')
 var cardTemplate = document.querySelector('template').content.querySelector('.map__card')
 var filtersContainer = document.querySelector('.map__filters-container')
@@ -57,6 +56,8 @@ var getArrayOfRandomLength = function (initialArray) {
 // Main functions
 
 var generateSimilarListings = function () {
+  var similarListings = []
+
   for (var i = 0; i < 8; i++) {
     var x = getRandomNumber(300, 900)
     var y = getRandomNumber(150, 500)
@@ -106,14 +107,17 @@ var createPins = function (pin) {
 
 var renderPins = function () {
   var listings = generateSimilarListings()
-
   var fragment = document.createDocumentFragment()
 
   for (var i = 0; i < listings.length; i++) {
-    fragment.appendChild(createPins(listings[i]))
+    var pin = createPins(listings[i])
+    pin.dataset.index = i
+    fragment.appendChild(pin)
   }
 
   pinList.appendChild(fragment)
+
+  return pinList
 }
 
 var generateCard = function (place) {
@@ -169,27 +173,24 @@ var defineAddressActivated = function () {
   fieldsetAddress.value = xAfterDragged + ', ' + yAfterDragged
 }
 
+var renderCardOnClick = function () {
+  var listings = generateSimilarListings()
+  var pins = renderPins().querySelectorAll('.map__pin')
+  console.log(pins)
+
+  for (var i = 0; i <= pins.length; i++) {
+    var pinIndex = pins[i + 1].dataset.index
+    pins[i + 1].addEventListener('click', generateCard(listings[pinIndex]))
+  }
+}
+
 var activatePage = function () {
   activateForm()
   defineAddressActivated()
-  renderPins()
+  renderCardOnClick()
   mainPin.removeEventListener('mouseup', activatePage)
 }
 
 // Execution
 defineAddressUnactivated()
 mainPin.addEventListener('mouseup', activatePage)
-mainPin.addEventListener('click', function () {
-  generateCard(similarListings[0])
-})
-
-// for (var i = 2; i <= pinList.length; i++) {
-//   generateCard(similarListings[i - 2])
-// }
-
-// {
-//   if (pinList.children[2]) { generateCard(similarListings[0]) } else {
-//     console.log('error')
-//   }
-// }
-// generateCard(pinList.children[1])
