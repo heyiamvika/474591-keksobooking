@@ -132,11 +132,16 @@ var renderPins = function () {
 
 var generateCard = function (place) {
   var card = cardTemplate.cloneNode(true)
+  for (var i = 0; i < 2; i++) {
+    var cardPhoto = card.querySelector('.popup__photo').cloneNode()
+    card.querySelector('.popup__photos').appendChild(cardPhoto)
+  }
   document.querySelector('.map').insertBefore(card, filtersContainer)
   return card
 }
 
 var generateCardData = function (card, place) {
+  var photosArray = card.querySelector('.popup__photos')
   card.querySelector('.popup__title').textContent = place.offer.title
   card.querySelector('.popup__text--address').textContent = place.location.x + ', ' + place.location.y
   card.querySelector('.popup__text--price').textContent = place.offer.price + '₽/ночь'
@@ -156,11 +161,9 @@ var generateCardData = function (card, place) {
   }
   card.querySelector('.popup__description').textContent = place.offer.description
   for (i = 0; i < place.offer.photos.length; i++) {
-    var cardPhoto = card.querySelector('.popup__photo').cloneNode()
-    cardPhoto.src = place.offer.photos[i]
-    card.querySelector('.popup__photos').appendChild(cardPhoto)
+    var photo = photosArray.children[i]
+    photo.src = place.offer.photos[i]
   }
-  card.querySelector('.popup__photo').remove()
   card.querySelector('.popup__avatar').src = place.author.avatar
 }
 
