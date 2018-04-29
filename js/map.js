@@ -105,25 +105,10 @@ var createPins = function (pin) {
   return element
 }
 
-// var renderPins = function () {
-//   var listings = generateSimilarListings()
-//   var fragment = document.createDocumentFragment()
-//
-//   for (var i = 0; i < listings.length; i++) {
-//     var pin = createPins(listings[i])
-//     pin.dataset.index = i
-//     fragment.appendChild(pin)
-//   }
-//
-//   pinList.appendChild(fragment)
-//
-//   return pinList
-// }
-
 var renderPins = function () {
   var listings = generateSimilarListings()
   var fragment = document.createDocumentFragment()
-
+  console.log('pins: ', listings)
   for (var i = 0; i < listings.length; i++) {
     var pin = createPins(listings[i])
     pin.dataset.index = i
@@ -133,13 +118,20 @@ var renderPins = function () {
   pinList.appendChild(fragment)
 
   var pins = pinList.querySelectorAll('.map__pin')
+
   for (i = 1; i < pins.length; i++) {
-    var pinIndex = pins[i].dataset.index
-    pins[i].addEventListener('click', generateCard(listings[pinIndex]))
+    var createEventListener = function (x) {
+      pins[i].addEventListener('click', function () {
+        var card = generateCard(listings[pins[x].dataset.index])
+      })
+    }
+
+    createEventListener(i)
   }
 }
 
 var generateCard = function (place) {
+  console.log('place: ', place)
   var card = cardTemplate.cloneNode(true)
   card.querySelector('.popup__title').textContent = place.offer.title
   card.querySelector('.popup__text--address').textContent = place.location.x + ', ' + place.location.y
@@ -168,6 +160,8 @@ var generateCard = function (place) {
   card.querySelector('.popup__avatar').src = place.author.avatar
 
   document.querySelector('.map').insertBefore(card, filtersContainer)
+
+  return card
 }
 
 // Event listeners
@@ -196,7 +190,6 @@ var activatePage = function () {
   activateForm()
   defineAddressActivated()
   renderPins()
-  // renderCardOnClick()
   mainPin.removeEventListener('mouseup', activatePage)
 }
 
