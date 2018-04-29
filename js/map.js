@@ -64,7 +64,7 @@ var generateSimilarListings = function () {
 
     var listing = {
       'author': {
-        'avatar': 'img/avatars/user0' + getRandomNumber(1, 8) + '.png'
+        'avatar': 'img/avatars/user0' + (i + 1) + '.png'
       },
 
       'offer': {
@@ -108,7 +108,6 @@ var createPins = function (pin) {
 var renderPins = function () {
   var listings = generateSimilarListings()
   var fragment = document.createDocumentFragment()
-  console.log('pins: ', listings)
   for (var i = 0; i < listings.length; i++) {
     var pin = createPins(listings[i])
     pin.dataset.index = i
@@ -118,11 +117,12 @@ var renderPins = function () {
   pinList.appendChild(fragment)
 
   var pins = pinList.querySelectorAll('.map__pin')
+  var cardGenerated = generateCard()
 
   for (i = 1; i < pins.length; i++) {
     var createEventListener = function (x) {
       pins[i].addEventListener('click', function () {
-        var card = generateCard(listings[pins[x].dataset.index])
+        var card = generateCardData(cardGenerated, listings[pins[x].dataset.index])
       })
     }
 
@@ -131,8 +131,14 @@ var renderPins = function () {
 }
 
 var generateCard = function (place) {
-  console.log('place: ', place)
   var card = cardTemplate.cloneNode(true)
+
+  document.querySelector('.map').insertBefore(card, filtersContainer)
+
+  return card
+}
+
+var generateCardData = function (card, place) {
   card.querySelector('.popup__title').textContent = place.offer.title
   card.querySelector('.popup__text--address').textContent = place.location.x + ', ' + place.location.y
   card.querySelector('.popup__text--price').textContent = place.offer.price + '₽/ночь'
@@ -151,17 +157,15 @@ var generateCard = function (place) {
     card.querySelector('.popup__feature').textContent = listingFeatures[i]
   }
   card.querySelector('.popup__description').textContent = place.offer.description
+  var fragment = document.createDocumentFragment()
   for (i = 0; i < place.offer.photos.length; i++) {
     var cardPhoto = card.querySelector('.popup__photo').cloneNode()
     cardPhoto.src = place.offer.photos[i]
-    card.querySelector('.popup__photos').appendChild(cardPhoto)
+    fragment.appendChild(cardPhoto)
   }
+  card.querySelector('.popup__photos').appendChild(fragment)
   card.querySelector('.popup__photo').remove()
   card.querySelector('.popup__avatar').src = place.author.avatar
-
-  document.querySelector('.map').insertBefore(card, filtersContainer)
-
-  return card
 }
 
 // Event listeners
