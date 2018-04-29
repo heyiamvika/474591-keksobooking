@@ -93,7 +93,7 @@ var generateSimilarListings = function () {
   return similarListings
 }
 
-var createPins = function (pin) {
+var renderPin = function (pin) {
   var element = pinTemplate.cloneNode(true)
   var elementImage = element.querySelector('img')
 
@@ -109,7 +109,7 @@ var renderPins = function () {
   var listings = generateSimilarListings()
   var fragment = document.createDocumentFragment()
   for (var i = 0; i < listings.length; i++) {
-    var pin = createPins(listings[i])
+    var pin = renderPin(listings[i])
     pin.dataset.index = i
     fragment.appendChild(pin)
   }
@@ -132,13 +132,16 @@ var renderPins = function () {
 
 var generateCard = function (place) {
   var card = cardTemplate.cloneNode(true)
-
+  for (var i = 0; i < 2; i++) {
+    var cardPhoto = card.querySelector('.popup__photo').cloneNode()
+    card.querySelector('.popup__photos').appendChild(cardPhoto)
+  }
   document.querySelector('.map').insertBefore(card, filtersContainer)
-
   return card
 }
 
 var generateCardData = function (card, place) {
+  var photosArray = card.querySelector('.popup__photos')
   card.querySelector('.popup__title').textContent = place.offer.title
   card.querySelector('.popup__text--address').textContent = place.location.x + ', ' + place.location.y
   card.querySelector('.popup__text--price').textContent = place.offer.price + '₽/ночь'
@@ -157,14 +160,10 @@ var generateCardData = function (card, place) {
     card.querySelector('.popup__feature').textContent = listingFeatures[i]
   }
   card.querySelector('.popup__description').textContent = place.offer.description
-  var fragment = document.createDocumentFragment()
   for (i = 0; i < place.offer.photos.length; i++) {
-    var cardPhoto = card.querySelector('.popup__photo').cloneNode()
-    cardPhoto.src = place.offer.photos[i]
-    fragment.appendChild(cardPhoto)
+    var photo = photosArray.children[i]
+    photo.src = place.offer.photos[i]
   }
-  card.querySelector('.popup__photos').appendChild(fragment)
-  card.querySelector('.popup__photo').remove()
   card.querySelector('.popup__avatar').src = place.author.avatar
 }
 
@@ -176,27 +175,28 @@ var activateForm = function () {
   adFormFieldset.forEach(function (element) {
     element.removeAttribute('disabled')
   })
+  fieldsetAddress.value = defineAddressActivated()
 }
 
 var defineAddressUnactivated = function () {
   var xInitial = parseInt(mainPin.style.left, 10)
   var yInitial = parseInt(mainPin.style.top, 10)
-  fieldsetAddress.value = xInitial + ', ' + yInitial
+
+  return xInitial + ', ' + yInitial
 }
 
 var defineAddressActivated = function () {
   var xAfterDragged = parseInt(pinTemplate.style.left, 10) + pinImage.width / 2
   var yAfterDragged = parseInt(pinTemplate.style.top, 10) - pinImage.height
-  fieldsetAddress.value = xAfterDragged + ', ' + yAfterDragged
+  return xAfterDragged + ', ' + yAfterDragged
 }
 
 var activatePage = function () {
   activateForm()
-  defineAddressActivated()
   renderPins()
   mainPin.removeEventListener('mouseup', activatePage)
 }
 
 // Execution
-defineAddressUnactivated()
+fieldsetAddress.value = defineAddressUnactivated()
 mainPin.addEventListener('mouseup', activatePage)
