@@ -2,7 +2,6 @@
 
 // Data
 
-var similarListings = []
 var listingTitle = ['Большая уютная квартира', 'Маленькая неуютная квартира', 'Огромный прекрасный дворец', 'Маленький ужасный дворец', 'Красивый гостевой домик', 'Некрасивый негостеприимный домик', 'Уютное бунгало далеко от моря', 'Неуютное бунгало по колено в воде']
 var listingType = ['palace', 'flat', 'house', 'bungalo']
 var listingTime = ['12:00', '13:00', '14:00']
@@ -12,8 +11,12 @@ var listingPhotos = ['http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http
 // Elements
 
 var map = document.querySelector('.map')
+var mainPin = document.querySelector('.map__pin--main')
+var adForm = document.querySelector('.ad-form')
+var adFormFieldset = adForm.querySelectorAll('fieldset')
+var fieldsetAddress = adForm.querySelector('#address')
 var pinList = document.querySelector('.map__pins')
-var pinTemplate = document.querySelector('.map__pin')
+var pinTemplate = pinList.querySelector('.map__pin')
 var pinImage = pinTemplate.querySelector('img')
 var cardTemplate = document.querySelector('template').content.querySelector('.map__card')
 var filtersContainer = document.querySelector('.map__filters-container')
@@ -53,13 +56,15 @@ var getArrayOfRandomLength = function (initialArray) {
 // Main functions
 
 var generateSimilarListings = function () {
+  var similarListings = []
+
   for (var i = 0; i < 8; i++) {
     var x = getRandomNumber(300, 900)
     var y = getRandomNumber(150, 500)
 
     var listing = {
       'author': {
-        'avatar': 'img/avatars/user0' + getRandomNumber(1, 8) + '.png'
+        'avatar': 'img/avatars/user0' + (i + 1) + '.png'
       },
 
       'offer': {
@@ -90,29 +95,50 @@ var generateSimilarListings = function () {
 
 var createPins = function (pin) {
   var element = pinTemplate.cloneNode(true)
+  var elementImage = element.querySelector('img')
 
   element.style.left = (pin.location.x - pinImage.width / 2) + 'px'
   element.style.top = (pin.location.y - pinImage.height) + 'px'
-  element.style.src = pin.author.avatar
-  // Why is  there an empty string, when I console.log()???
-  element.style.alt = pin.offer.title
+  elementImage.src = pin.author.avatar
+  elementImage.alt = pin.offer.title
 
-  console.log(element.style.src)
   return element
 }
 
 var renderPins = function () {
+  var listings = generateSimilarListings()
   var fragment = document.createDocumentFragment()
-
-  for (var i = 0; i < similarListings.length; i++) {
-    fragment.appendChild(createPins(similarListings[i]))
+  for (var i = 0; i < listings.length; i++) {
+    var pin = createPins(listings[i])
+    pin.dataset.index = i
+    fragment.appendChild(pin)
   }
 
   pinList.appendChild(fragment)
+
+  var pins = pinList.querySelectorAll('.map__pin')
+  var cardGenerated = generateCard()
+
+  for (i = 1; i < pins.length; i++) {
+    var createEventListener = function (x) {
+      pins[i].addEventListener('click', function () {
+        var card = generateCardData(cardGenerated, listings[pins[x].dataset.index])
+      })
+    }
+
+    createEventListener(i)
+  }
 }
 
 var generateCard = function (place) {
   var card = cardTemplate.cloneNode(true)
+
+  document.querySelector('.map').insertBefore(card, filtersContainer)
+
+  return card
+}
+
+var generateCardData = function (card, place) {
   card.querySelector('.popup__title').textContent = place.offer.title
   card.querySelector('.popup__text--address').textContent = place.location.x + ', ' + place.location.y
   card.querySelector('.popup__text--price').textContent = place.offer.price + '₽/ночь'
@@ -131,20 +157,46 @@ var generateCard = function (place) {
     card.querySelector('.popup__feature').textContent = listingFeatures[i]
   }
   card.querySelector('.popup__description').textContent = place.offer.description
+  var fragment = document.createDocumentFragment()
   for (i = 0; i < place.offer.photos.length; i++) {
     var cardPhoto = card.querySelector('.popup__photo').cloneNode()
     cardPhoto.src = place.offer.photos[i]
-    card.querySelector('.popup__photos').appendChild(cardPhoto)
+    fragment.appendChild(cardPhoto)
   }
+  card.querySelector('.popup__photos').appendChild(fragment)
   card.querySelector('.popup__photo').remove()
   card.querySelector('.popup__avatar').src = place.author.avatar
+}
 
-  document.querySelector('.map').insertBefore(card, filtersContainer)
+// Event listeners
+
+var activateForm = function () {
+  map.classList.remove('map--faded')
+  adForm.classList.remove('ad-form--disabled')
+  adFormFieldset.forEach(function (element) {
+    element.removeAttribute('disabled')
+  })
+}
+
+var defineAddressUnactivated = function () {
+  var xInitial = parseInt(mainPin.style.left, 10)
+  var yInitial = parseInt(mainPin.style.top, 10)
+  fieldsetAddress.value = xInitial + ', ' + yInitial
+}
+
+var defineAddressActivated = function () {
+  var xAfterDragged = parseInt(pinTemplate.style.left, 10) + pinImage.width / 2
+  var yAfterDragged = parseInt(pinTemplate.style.top, 10) - pinImage.height
+  fieldsetAddress.value = xAfterDragged + ', ' + yAfterDragged
+}
+
+var activatePage = function () {
+  activateForm()
+  defineAddressActivated()
+  renderPins()
+  mainPin.removeEventListener('mouseup', activatePage)
 }
 
 // Execution
-
-map.classList.remove('map--faded')
-generateSimilarListings()
-renderPins()
-generateCard(similarListings[0])
+defineAddressUnactivated()
+mainPin.addEventListener('mouseup', activatePage)
