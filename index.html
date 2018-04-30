@@ -114,7 +114,7 @@
 
           <fieldset class="ad-form__element ad-form__element--wide" disabled>
             <label class="ad-form__label" for="address">Адрес</label>
-            <input id="address" name="address" type="text" disabled>
+            <input id="address" name="address" type="text" readonly>
           </fieldset>
 
           <fieldset class="ad-form__element" disabled>
@@ -146,17 +146,17 @@
           </select>
           </fieldset>
 
-          <fieldset class="ad-form__element" disabled>
+          <fieldset class="ad-form__element room-number-fieldset" disabled>
             <label class="ad-form__label" for="room_number">Кол-во комнат</label>
             <select id="room_number" name="rooms" required>
-            <option value="1" id="one-room" selected>1 комната</option>
+            <option value="1" id="one-room" >1 комната</option>
             <option value="2" id="two-rooms" >2 комнаты</option>
-            <option value="3" id="three-rooms" >3 комнаты</option>
+            <option value="3" id="three-rooms" selected>3 комнаты</option>
             <option value="100" id="one-hundred-rooms" >100 комнат</option>
           </select>
           </fieldset>
 
-          <fieldset class="ad-form__element" disabled>
+          <fieldset class="ad-form__element capacity-fieldset" disabled>
             <label class="ad-form__label" for="capacity">Количество мест</label>
             <select id="capacity" name="capacity" required>
             <option value="3" id="three-guests" selected>для 3 гостей</option>

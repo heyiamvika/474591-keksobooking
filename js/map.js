@@ -220,18 +220,18 @@ var syncGuestsAndRooms = function () {
   var capacity = document.querySelector('#capacity')
 
   if (roomNumber.querySelector('#one-room').hasAttribute('selected')) {
-    capacity.querySelector('#two-guests').setAttribute('disabled', '')
-    capacity.querySelector('#three-guests').setAttribute('disabled', '')
-    capacity.querySelector('#no-guests').setAttribute('disabled', '')
+    capacity.querySelector('#two-guests').remove()
+    capacity.querySelector('#three-guests').remove()
+    capacity.querySelector('#no-guests').remove()
   } else if (roomNumber.querySelector('#two-rooms').hasAttribute('selected')) {
-    capacity.querySelector('#three-guests').setAttribute('disabled', '')
-    capacity.querySelector('#no-guests').setAttribute('disabled', '')
+    capacity.querySelector('#three-guests').remove()
+    capacity.querySelector('#no-guests').remove()
   } else if (roomNumber.querySelector('#three-rooms').hasAttribute('selected')) {
-    capacity.querySelector('#no-guests').setAttribute('disabled', '')
+    capacity.querySelector('#no-guests').remove()
   } else {
-    capacity.querySelector('#one-guest').setAttribute('disabled', '')
-    capacity.querySelector('#two-guests').setAttribute('disabled', '')
-    capacity.querySelector('#three-guests').setAttribute('disabled', '')
+    capacity.querySelector('#one-guest').remove()
+    capacity.querySelector('#two-guests').remove()
+    capacity.querySelector('#three-guests').remove()
   }
 }
 
