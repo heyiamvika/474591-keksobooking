@@ -92,7 +92,7 @@
       <section class="notice">
         <h2 class="notice__title">Ваше объявление</h2>
 
-        <form class="ad-form ad-form--disabled" method="post" enctype="multipart/form-data" autocomplete="off">
+        <form class="ad-form ad-form--disabled" method="post" enctype="multipart/form-data" action="https://js.dump.academy/keksobooking" autocomplete="off">
           <fieldset class="ad-form-header" disabled>
             <legend class="ad-form-header__title">Ваша фотография (для карты)</legend>
             <div class="ad-form-header__upload">
@@ -109,17 +109,17 @@
 
           <fieldset class="ad-form__element ad-form__element--wide" disabled>
             <label class="ad-form__label" for="title">Заголовок объявления</label>
-            <input id="title" name="title" type="text" placeholder="Милая, уютная квартирка в центре Токио">
+            <input id="title" name="title" type="text" placeholder="Милая, уютная квартирка в центре Токио" minlength="30" maxlength="100" required>
           </fieldset>
 
           <fieldset class="ad-form__element ad-form__element--wide" disabled>
             <label class="ad-form__label" for="address">Адрес</label>
-            <input id="address" name="address" type="text">
+            <input id="address" name="address" type="text" disabled>
           </fieldset>
 
           <fieldset class="ad-form__element" disabled>
             <label class="ad-form__label" for="type">Тип жилья</label>
-            <select id="type" name="type">
+            <select id="type" name="type" required>
             <option value="flat" selected>Квартира</option>
             <option value="bungalo">Лачуга</option>
             <option value="house">Дом</option>
@@ -129,40 +129,40 @@
 
           <fieldset class="ad-form__element" disabled>
             <label class="ad-form__label" for="price">Цена за ночь, руб.</label>
-            <input id="price" name="price" type="number" placeholder="5000">
+            <input id="price" name="price" type="number" placeholder="5000" maxlength="1000000" required>
           </fieldset>
 
           <fieldset class="ad-form__element ad-form__element--time" disabled>
             <label class="ad-form__label" for="timein">Время заезда и выезда</label>
-            <select id="timein" name="timein">
-            <option value="12:00" selected>После 12</option>
-            <option value="13:00">После 13</option>
-            <option value="14:00">После 14</option>
+            <select id="timein" name="timein" required>
+            <option value="12:00" id="timein12" selected>После 12</option>
+            <option value="13:00" id="timein13" >После 13</option>
+            <option value="14:00" id="timein14" >После 14</option>
           </select>
-            <select id="timeout" name="timeout" title="Time to go out">
-            <option value="12:00" selected>Выезд до 12</option>
-            <option value="13:00">Выезд до 13</option>
-            <option value="14:00">Выезд до 14</option>
+            <select id="timeout" name="timeout" title="Time to go out" required>
+            <option value="12:00" id="timeout12" selected>Выезд до 12</option>
+            <option value="13:00" id="timeout13" >Выезд до 13</option>
+            <option value="14:00" id="timeout14" >Выезд до 14</option>
           </select>
           </fieldset>
 
           <fieldset class="ad-form__element" disabled>
             <label class="ad-form__label" for="room_number">Кол-во комнат</label>
-            <select id="room_number" name="rooms">
-            <option value="1" selected>1 комната</option>
-            <option value="2">2 комнаты</option>
-            <option value="3">3 комнаты</option>
-            <option value="100">100 комнат</option>
+            <select id="room_number" name="rooms" required>
+            <option value="1" id="one-room" selected>1 комната</option>
+            <option value="2" id="two-rooms" >2 комнаты</option>
+            <option value="3" id="three-rooms" >3 комнаты</option>
+            <option value="100" id="one-hundred-rooms" >100 комнат</option>
           </select>
           </fieldset>
 
           <fieldset class="ad-form__element" disabled>
             <label class="ad-form__label" for="capacity">Количество мест</label>
-            <select id="capacity" name="capacity">
-            <option value="3" selected>для 3 гостей</option>
-            <option value="2">для 2 гостей</option>
-            <option value="1">для 1 гостя</option>
-            <option value="0">не для гостей</option>
+            <select id="capacity" name="capacity" required>
+            <option value="3" id="three-guests" selected>для 3 гостей</option>
+            <option value="2" id="two-guests" >для 2 гостей</option>
+            <option value="1" id="one-guest" >для 1 гостя</option>
+            <option value="0" id="no-guests" >не для гостей</option>
           </select>
           </fieldset>
 

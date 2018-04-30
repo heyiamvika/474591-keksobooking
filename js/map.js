@@ -107,6 +107,7 @@ var renderPin = function (pin) {
 
 var renderPins = function () {
   var listings = generateSimilarListings()
+  var cardGenerated = generateCard()
   var fragment = document.createDocumentFragment()
   for (var i = 0; i < listings.length; i++) {
     var pin = renderPin(listings[i])
@@ -117,7 +118,6 @@ var renderPins = function () {
   pinList.appendChild(fragment)
 
   var pins = pinList.querySelectorAll('.map__pin')
-  var cardGenerated = generateCard()
 
   for (i = 1; i < pins.length; i++) {
     var createEventListener = function (x) {
@@ -169,15 +169,6 @@ var generateCardData = function (card, place) {
 
 // Event listeners
 
-var activateForm = function () {
-  map.classList.remove('map--faded')
-  adForm.classList.remove('ad-form--disabled')
-  adFormFieldset.forEach(function (element) {
-    element.removeAttribute('disabled')
-  })
-  fieldsetAddress.value = defineAddressActivated()
-}
-
 var defineAddressUnactivated = function () {
   var xInitial = parseInt(mainPin.style.left, 10)
   var yInitial = parseInt(mainPin.style.top, 10)
@@ -189,6 +180,82 @@ var defineAddressActivated = function () {
   var xAfterDragged = parseInt(pinTemplate.style.left, 10) + pinImage.width / 2
   var yAfterDragged = parseInt(pinTemplate.style.top, 10) - pinImage.height
   return xAfterDragged + ', ' + yAfterDragged
+}
+
+var checkMinPrice = function () {
+  var housingType = document.querySelector('#type')
+  var housingPrice = document.querySelector('#price')
+  if (housingType.querySelector('option').value === 'bungalo') {
+    housingPrice.minlength = '0'
+  } else if (housingType.querySelector('option').value === 'flat') {
+    housingPrice.minlength = '1000'
+  } else if (housingType.querySelector('option').value === 'house') {
+    housingPrice.minlength = '5000'
+  } else if (housingType.querySelector('option').value === 'palace') {
+    housingPrice.minlength = '10000'
+  }
+}
+
+var syncTimeInTimeOut = function () {
+  var timeIn = document.querySelector('#timein')
+  var timeOut = document.querySelector('#timeout')
+
+  if (timeIn.querySelector('#timein12').hasAttribute('selected')) {
+    timeOut.querySelector('#timeout12').setAttribute('selected', '')
+    timeOut.querySelector('#timeout13').removeAttribute('selected')
+    timeOut.querySelector('#timeout14').removeAttribute('selected')
+  } else if (timeIn.querySelector('#timein13').hasAttribute('selected')) {
+    timeOut.querySelector('#timeout13').setAttribute('selected', '')
+    timeOut.querySelector('#timeout12').removeAttribute('selected')
+    timeOut.querySelector('#timeout14').removeAttribute('selected')
+  } else if (timeIn.querySelector('#timein14').hasAttribute('selected')) {
+    timeOut.querySelector('#timeout14').setAttribute('selected', '')
+    timeOut.querySelector('#timeout12').removeAttribute('selected')
+    timeOut.querySelector('#timeout13').removeAttribute('selected')
+  }
+}
+
+var syncGuestsAndRooms = function () {
+  var roomNumber = document.querySelector('#room_number')
+  var capacity = document.querySelector('#capacity')
+
+  if (roomNumber.querySelector('#one-room').hasAttribute('selected')) {
+    capacity.querySelector('#two-guests').setAttribute('disabled', '')
+    capacity.querySelector('#three-guests').setAttribute('disabled', '')
+    capacity.querySelector('#no-guests').setAttribute('disabled', '')
+  } else if (roomNumber.querySelector('#two-rooms').hasAttribute('selected')) {
+    capacity.querySelector('#three-guests').setAttribute('disabled', '')
+    capacity.querySelector('#no-guests').setAttribute('disabled', '')
+  } else if (roomNumber.querySelector('#three-rooms').hasAttribute('selected')) {
+    capacity.querySelector('#no-guests').setAttribute('disabled', '')
+  } else {
+    capacity.querySelector('#one-guest').setAttribute('disabled', '')
+    capacity.querySelector('#two-guests').setAttribute('disabled', '')
+    capacity.querySelector('#three-guests').setAttribute('disabled', '')
+  }
+}
+
+var checkFormSuccess = function () {
+  var successMessage = document.querySelector('.success')
+
+  adForm.addEventListener('submit', function (evt) {
+    if (adForm.checkValidity() === true) {
+      successMessage.removeAttribute('hidden')
+    }
+  })
+}
+
+var activateForm = function () {
+  map.classList.remove('map--faded')
+  adForm.classList.remove('ad-form--disabled')
+  adFormFieldset.forEach(function (element) {
+    element.removeAttribute('disabled')
+  })
+  fieldsetAddress.value = defineAddressActivated()
+  checkMinPrice()
+  syncTimeInTimeOut()
+  syncGuestsAndRooms()
+  checkFormSuccess()
 }
 
 var activatePage = function () {
