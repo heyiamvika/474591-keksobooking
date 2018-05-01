@@ -3,7 +3,7 @@
 // Data
 
 var listingTitle = ['Большая уютная квартира', 'Маленькая неуютная квартира', 'Огромный прекрасный дворец', 'Маленький ужасный дворец', 'Красивый гостевой домик', 'Некрасивый негостеприимный домик', 'Уютное бунгало далеко от моря', 'Неуютное бунгало по колено в воде']
-var listingType = ['palace', 'flat', 'house', 'bungalo']
+var listingType = ['bungalo', 'flat', 'house', 'palace' ]
 var listingTime = ['12:00', '13:00', '14:00']
 var listingFeatures = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner']
 var listingPhotos = ['http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http://o0.github.io/assets/images/tokyo/hotel2.jpg', 'http://o0.github.io/assets/images/tokyo/hotel3.jpg']
@@ -185,58 +185,61 @@ var defineAddressActivated = function () {
 var checkMinPrice = function () {
   var housingType = document.querySelector('#type')
   var housingPrice = document.querySelector('#price')
-  if (housingType.querySelector('option').value === 'bungalo') {
-    housingPrice.minlength = '0'
-  } else if (housingType.querySelector('option').value === 'flat') {
-    housingPrice.minlength = '1000'
-  } else if (housingType.querySelector('option').value === 'house') {
-    housingPrice.minlength = '5000'
-  } else if (housingType.querySelector('option').value === 'palace') {
-    housingPrice.minlength = '10000'
-  }
+
+  housingType.addEventListener('change', function () {
+    if (housingType.value === listingType[0]) {
+      housingPrice.minlength = '0'
+    } else if (housingType.value === listingType[1]) {
+      housingPrice.minlength = '1000'
+    } else if (housingType.value === listingType[2]) {
+      housingPrice.minlength = '5000'
+    } else if (housingType.value === listingType[3]) {
+      housingPrice.minlength = '10000'
+    }
+
+    housingPrice.placeholder = housingPrice.minlength
+  })
 }
 
 var syncTimeInTimeOut = function () {
   var timeIn = document.querySelector('#timein')
   var timeOut = document.querySelector('#timeout')
 
-  if (timeIn.querySelector('#timein12').hasAttribute('selected')) {
-    timeOut.querySelector('#timeout12').setAttribute('selected', '')
-    timeOut.querySelector('#timeout13').removeAttribute('selected')
-    timeOut.querySelector('#timeout14').removeAttribute('selected')
-  } else if (timeIn.querySelector('#timein13').hasAttribute('selected')) {
-    timeOut.querySelector('#timeout13').setAttribute('selected', '')
-    timeOut.querySelector('#timeout12').removeAttribute('selected')
-    timeOut.querySelector('#timeout14').removeAttribute('selected')
-  } else if (timeIn.querySelector('#timein14').hasAttribute('selected')) {
-    timeOut.querySelector('#timeout14').setAttribute('selected', '')
-    timeOut.querySelector('#timeout12').removeAttribute('selected')
-    timeOut.querySelector('#timeout13').removeAttribute('selected')
-  }
+  timeIn.addEventListener('change', function () {
+    timeOut.value = timeIn.value
+  })
 }
 
 var syncGuestsAndRooms = function () {
   var roomNumber = document.querySelector('#room_number')
   var capacity = document.querySelector('#capacity')
+  var roomNumbers = [1, 2, 3, 100]
+  var capacityValues = [1, 2, 3, 0]
 
   roomNumber.addEventListener('change', function () {
-    if (roomNumber.querySelector('#one-room').hasAttribute('selected')) {
-      capacity.querySelector('#one-guest').setAttribute('selected', '')
-      capacity.querySelector('#two-guests').setAttribute('disabled', '')
-      capacity.querySelector('#three-guests').setAttribute('disabled', '')
-      capacity.querySelector('#no-guests').setAttribute('disabled', '')
-    } else if (roomNumber.querySelector('#two-rooms').hasAttribute('selected')) {
-      capacity.querySelector('#two-guests').setAttribute('selected', '')
-      capacity.querySelector('#three-guests').setAttribute('disabled', '')
-      capacity.querySelector('#no-guests').setAttribute('disabled', '')
-    } else if (roomNumber.querySelector('#three-rooms').hasAttribute('selected')) {
-      capacity.querySelector('#three-guests').setAttribute('selected', '')
-      capacity.querySelector('#no-guests').setAttribute('disabled', '')
+    var roomValue = Number(roomNumber.value)
+    var index = roomNumbers.indexOf(roomValue)
+    capacity.value = capacityValues[index]
+
+    for (var i = 0; i < capacity.length; i++) {
+      if (capacity[i].hasAttribute('disabled')) {
+        capacity[i].removeAttribute('disabled')
+      }
+    }
+
+    if (roomValue === roomNumbers[0]) {
+      capacity[1].setAttribute('disabled', '')
+      capacity[2].setAttribute('disabled', '')
+      capacity[3].setAttribute('disabled', '')
+    } else if (roomValue === roomNumbers[1]) {
+      capacity[2].setAttribute('disabled', '')
+      capacity[3].setAttribute('disabled', '')
+    } else if (roomValue === roomNumbers[2]) {
+      capacity[3].setAttribute('disabled', '')
     } else {
-      capacity.querySelector('#no-guests').setAttribute('selected', '')
-      capacity.querySelector('#one-guest').setAttribute('disabled', '')
-      capacity.querySelector('#two-guests').setAttribute('disabled', '')
-      capacity.querySelector('#three-guests').setAttribute('disabled', '')
+      capacity[0].setAttribute('disabled', '')
+      capacity[1].setAttribute('disabled', '')
+      capacity[2].setAttribute('disabled', '')
     }
   })
 }
