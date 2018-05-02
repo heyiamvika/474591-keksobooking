@@ -3,7 +3,7 @@
 // Data
 
 var listingTitle = ['Большая уютная квартира', 'Маленькая неуютная квартира', 'Огромный прекрасный дворец', 'Маленький ужасный дворец', 'Красивый гостевой домик', 'Некрасивый негостеприимный домик', 'Уютное бунгало далеко от моря', 'Неуютное бунгало по колено в воде']
-var listingType = ['bungalo', 'flat', 'house', 'palace' ]
+var listingType = ['bungalo', 'flat', 'house', 'palace']
 var listingTime = ['12:00', '13:00', '14:00']
 var listingFeatures = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner']
 var listingPhotos = ['http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http://o0.github.io/assets/images/tokyo/hotel2.jpg', 'http://o0.github.io/assets/images/tokyo/hotel3.jpg']
@@ -125,7 +125,6 @@ var renderPins = function () {
         var card = generateCardData(cardGenerated, listings[pins[x].dataset.index])
       })
     }
-
     createEventListener(i)
   }
 }
@@ -185,19 +184,16 @@ var defineAddressActivated = function () {
 var checkMinPrice = function () {
   var housingType = document.querySelector('#type')
   var housingPrice = document.querySelector('#price')
+  var price = [0, 1000, 5000, 10000]
 
   housingType.addEventListener('change', function () {
-    if (housingType.value === listingType[0]) {
-      housingPrice.minlength = '0'
-    } else if (housingType.value === listingType[1]) {
-      housingPrice.minlength = '1000'
-    } else if (housingType.value === listingType[2]) {
-      housingPrice.minlength = '5000'
-    } else if (housingType.value === listingType[3]) {
-      housingPrice.minlength = '10000'
-    }
+    for (var i = 0; i < listingType.length; i++) {
+      var housingTypeValue = housingType.value
+      var index = listingType.indexOf(housingTypeValue)
+      housingPrice.minlength = price[index]
 
-    housingPrice.placeholder = housingPrice.minlength
+      housingPrice.placeholder = housingPrice.minlength
+    }
   })
 }
 
@@ -227,14 +223,14 @@ var syncGuestsAndRooms = function () {
       }
     }
 
-    if (roomValue === roomNumbers[0]) {
+    if (roomValue === 1) {
       capacity[1].setAttribute('disabled', '')
       capacity[2].setAttribute('disabled', '')
       capacity[3].setAttribute('disabled', '')
-    } else if (roomValue === roomNumbers[1]) {
+    } else if (roomValue === 2) {
       capacity[2].setAttribute('disabled', '')
       capacity[3].setAttribute('disabled', '')
-    } else if (roomValue === roomNumbers[2]) {
+    } else if (roomValue === 3) {
       capacity[3].setAttribute('disabled', '')
     } else {
       capacity[0].setAttribute('disabled', '')
