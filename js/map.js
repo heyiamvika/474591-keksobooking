@@ -217,26 +217,17 @@ var syncGuestsAndRooms = function () {
     var index = roomNumbers.indexOf(roomValue)
     capacity.value = capacityValues[index]
 
-    for (var i = 0; i < capacity.length; i++) {
+    Array.from(capacity).forEach(function (option, i) {
       if (capacity[i].hasAttribute('disabled')) {
         capacity[i].removeAttribute('disabled')
       }
-    }
 
-    if (roomValue === 1) {
-      capacity[1].setAttribute('disabled', '')
-      capacity[2].setAttribute('disabled', '')
-      capacity[3].setAttribute('disabled', '')
-    } else if (roomValue === 2) {
-      capacity[2].setAttribute('disabled', '')
-      capacity[3].setAttribute('disabled', '')
-    } else if (roomValue === 3) {
-      capacity[3].setAttribute('disabled', '')
-    } else {
-      capacity[0].setAttribute('disabled', '')
-      capacity[1].setAttribute('disabled', '')
-      capacity[2].setAttribute('disabled', '')
-    }
+      if (roomValue === 100 && Number(option.value) !== 0) {
+        option.setAttribute('disabled', '')
+      } else if (Number(option.value) > roomValue || Number(option.value) === 0) {
+        option.setAttribute('disabled', '')
+      }
+    })
   })
 }
 
