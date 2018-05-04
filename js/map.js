@@ -176,8 +176,8 @@ var defineAddressUnactivated = function () {
 }
 
 var defineAddressActivated = function () {
-  var xAfterDragged = parseInt(pinTemplate.style.left, 10) + pinImage.width / 2
-  var yAfterDragged = parseInt(pinTemplate.style.top, 10) - pinImage.height
+  var xAfterDragged = parseInt(mainPin.style.left, 10) + pinImage.width / 2
+  var yAfterDragged = parseInt(mainPin.style.top, 10) - pinImage.height
   return xAfterDragged + ', ' + yAfterDragged
 }
 
@@ -224,7 +224,7 @@ var syncGuestsAndRooms = function () {
 
       if (roomValue === 100 && Number(option.value) !== 0) {
         option.setAttribute('disabled', '')
-      } else if (Number(option.value) > roomValue || Number(option.value) === 0) {
+      } if (Number(option.value) > roomValue || Number(option.value) === 0) {
         option.setAttribute('disabled', '')
       }
     })
@@ -247,7 +247,6 @@ var activateForm = function () {
   adFormFieldset.forEach(function (element) {
     element.removeAttribute('disabled')
   })
-  fieldsetAddress.value = defineAddressActivated()
   checkMinPrice()
   syncTimeInTimeOut()
   syncGuestsAndRooms()
@@ -257,9 +256,53 @@ var activateForm = function () {
 var activatePage = function () {
   activateForm()
   renderPins()
-  mainPin.removeEventListener('mouseup', activatePage)
+  mainPin.removeEventListener('click', activatePage)
 }
 
+// Pin mouse events
+mainPin.addEventListener('mousedown', function (evt) {
+  evt.preventDefault()
+
+  var mouseDrag = function () {
+    var startPoint = {
+      x: parseInt(mainPin.style.left, 10),
+      y: parseInt(mainPin.style.top, 10)
+    }
+
+    var shift = {
+      x: startPoint.x - evt.clientX,
+      y: startPoint.y - evt.clientY
+    }
+
+    startPoint = {
+      x: evt.clientX,
+      y: evt.clientY
+    }
+
+    mainPin.style.left = (mainPin.offsetLeft - shift.x) + 'px'
+    mainPin.style.top = (mainPin.offsetTop - shift.y) + 'px'
+  }
+
+  var onMouseMove = function (moveEvt) {
+    moveEvt.preventDefault()
+    mouseDrag()
+  }
+
+  var onMouseUp = function (upEvt) {
+    upEvt.preventDefault()
+
+    mouseDrag()
+
+    mainPin.removeEventListener('mousemove', onMouseMove)
+    mainPin.removeEventListener('mouseup', onMouseUp)
+
+    fieldsetAddress.value = defineAddressActivated()
+  }
+
+  mainPin.addEventListener('mousemove', onMouseMove)
+  mainPin.addEventListener('mouseup', onMouseUp)
+})
+
 // Execution
+mainPin.addEventListener('click', activatePage)
 fieldsetAddress.value = defineAddressUnactivated()
-mainPin.addEventListener('mouseup', activatePage)
